@@ -1,6 +1,6 @@
-# DotNetExtras.OData Library
+# DotNetExtras.OData
 
-The `DotNetExtras.OData` library can parse and validate [OData filter expressions](https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/webservices/use-filter-expressions-in-odata-uris). 
+`DotNetExtras.OData` is a .NET Core library that can parse and validate [OData filter expressions](https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/webservices/use-filter-expressions-in-odata-uris).
 
 Use the `DotNetExtras.OData` library to:
 
