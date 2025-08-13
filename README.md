@@ -8,6 +8,7 @@ Use the `DotNetExtras.OData` library to:
 - Validate a given filter against the custom rules.
 
 ## Documentation
+
 For complete documentation, usage details, and code samples, see:
 
 - [Documentation](https://alekdavis.github.io/dotnet-extras-odata)
@@ -16,6 +17,13 @@ For complete documentation, usage details, and code samples, see:
 - [OData filter validator demo](https://github.com/alekdavis/dotnet-extras-mail/tree/main/ODataFilterValidatorDemo)
 
 ## Package
+
 Install the latest version of the `DotNetExtras.OData` Nuget package from:
 
 - [https://www.nuget.org/packages/DotNetExtras.OData](https://www.nuget.org/packages/DotNetExtras.OData)
+
+## See also
+
+Check out other `DotNetExtras` libraries at:
+
+- [https://github.com/alekdavis/dotnet-extras](https://github.com/alekdavis/dotnet-extras)
