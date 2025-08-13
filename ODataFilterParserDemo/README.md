@@ -1,0 +1,2 @@
+﻿# DotNetExtras.ODataFilterParserDemo project
+This project implements a console application with the code samples illustrating how to use the `DotNetExtras.OData` library APIs to parse OData filter expressions.

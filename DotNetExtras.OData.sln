@@ -1,0 +1,63 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36401.2
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".README", ".README", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODataLib", "ODataLib\ODataLib.csproj", "{C2E1A993-79BA-E4CB-4401-C180CD78551E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODataTests", "ODataTests\ODataTests.csproj", "{4997206A-8D3B-AEEA-83F3-BC4DB8E3DD75}"
+EndProject
+Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "ODataHelp", "ODataHelp\ODataHelp.shfbproj", "{54155C6C-F6E8-4DAF-8737-0FFF264AB8E3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{C2E1A993-79BA-E4CB-4401-C180CD78551E} = {C2E1A993-79BA-E4CB-4401-C180CD78551E}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODataSampleModels", "ODataSampleModels\ODataSampleModels.csproj", "{BE4E7D5B-92BC-7F77-30C5-FAC31E168F08}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODataFilterParserDemo", "ODataFilterParserDemo\ODataFilterParserDemo.csproj", "{341ABD5F-5EDE-E347-0C1A-CDF173429099}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODataFilterValidatorDemo", "ODataFilterValidatorDemo\ODataFilterValidatorDemo.csproj", "{2B5CE3E5-B691-CDCA-56E9-C432E7F215C1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C2E1A993-79BA-E4CB-4401-C180CD78551E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C2E1A993-79BA-E4CB-4401-C180CD78551E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C2E1A993-79BA-E4CB-4401-C180CD78551E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C2E1A993-79BA-E4CB-4401-C180CD78551E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4997206A-8D3B-AEEA-83F3-BC4DB8E3DD75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4997206A-8D3B-AEEA-83F3-BC4DB8E3DD75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4997206A-8D3B-AEEA-83F3-BC4DB8E3DD75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4997206A-8D3B-AEEA-83F3-BC4DB8E3DD75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54155C6C-F6E8-4DAF-8737-0FFF264AB8E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54155C6C-F6E8-4DAF-8737-0FFF264AB8E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54155C6C-F6E8-4DAF-8737-0FFF264AB8E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54155C6C-F6E8-4DAF-8737-0FFF264AB8E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE4E7D5B-92BC-7F77-30C5-FAC31E168F08}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE4E7D5B-92BC-7F77-30C5-FAC31E168F08}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE4E7D5B-92BC-7F77-30C5-FAC31E168F08}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE4E7D5B-92BC-7F77-30C5-FAC31E168F08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{341ABD5F-5EDE-E347-0C1A-CDF173429099}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{341ABD5F-5EDE-E347-0C1A-CDF173429099}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{341ABD5F-5EDE-E347-0C1A-CDF173429099}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{341ABD5F-5EDE-E347-0C1A-CDF173429099}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B5CE3E5-B691-CDCA-56E9-C432E7F215C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B5CE3E5-B691-CDCA-56E9-C432E7F215C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B5CE3E5-B691-CDCA-56E9-C432E7F215C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B5CE3E5-B691-CDCA-56E9-C432E7F215C1}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6D92FEEE-62B6-48AF-8A1A-5AD66DB88D1C}
+	EndGlobalSection
+EndGlobal

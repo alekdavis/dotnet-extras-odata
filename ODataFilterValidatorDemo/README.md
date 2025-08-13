@@ -1,0 +1,2 @@
+﻿# DotNetExtras.ODataFilterValidatorDemo project
+This project implements a console application with the code samples illustrating how to use the `DotNetExtras.OData` library APIs to validate OData filter expressions.
