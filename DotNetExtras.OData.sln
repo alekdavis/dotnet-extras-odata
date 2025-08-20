@@ -23,6 +23,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODataFilterParserDemo", "OD
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODataFilterValidatorDemo", "ODataFilterValidatorDemo\ODataFilterValidatorDemo.csproj", "{2B5CE3E5-B691-CDCA-56E9-C432E7F215C1}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".NUGET", ".NUGET", "{E4184FB4-130A-4C0D-94B8-BCCB7DA8E26C}"
+	ProjectSection(SolutionItems) = preProject
+		publish.ps1 = publish.ps1
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
