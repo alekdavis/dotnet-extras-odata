@@ -188,6 +188,11 @@ if (validator.Failed)
         <linkText>DotNetExtras.OData NuGet package</linkText>
         <linkUri>https://www.nuget.org/packages/DotNetExtras.OData</linkUri>
       </externalLink>
+      <externalLink>
+        <linkText>DotNetExtras.Retry project repository</linkText>
+        <linkUri>https://github.com/alekdavis/dotnet-extras-retry</linkUri>
+        <linkTarget>_blank</linkTarget>
+      </externalLink>
     </relatedTopics>
   </developerConceptualDocument>
 </topic>

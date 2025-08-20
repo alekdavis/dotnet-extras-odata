@@ -1,0 +1,637 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<doc>
+  <assembly>
+    <name>DotNetExtras.OData</name>
+  </assembly>
+  <members>
+    <member name="T:DotNetExtras.OData.ODataFilterNode">
+      <summary>
+            Implements a node of the binary tree holding OData operator or operand use in a filter query.
+            </summary>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterNode.ParentName">
+      <summary>
+            Name of the parent node used by 'any' or 'all' operators.
+            </summary>
+      <remarks>
+            We need this property to be able to resolve property aliases,
+            so in the expression 'sponsor/socialLogins/any(s: s/name eq 'Facebook')',
+            instead of 's/name', we'd get the property 'sponsor/socialLogins/name'.
+            </remarks>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterNode.Parent">
+      <summary>
+            Parent node.
+            </summary>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterNode.Left">
+      <summary>
+            Left child node.
+            </summary>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterNode.Right">
+      <summary>
+            Right child node.
+            </summary>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterNode.Level">
+      <summary>
+            Level of the node from the root.
+            </summary>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterNode.Node">
+      <summary>
+            Native node object.
+            </summary>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterNode.Kind">
+      <summary>
+            Defines the type of operator or operand.
+            </summary>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterNode.IsOperator">
+      <summary>
+            Indicates whether the node is an operator (as opposed to an operand).
+            </summary>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterNode.Operator">
+      <summary>
+            Native operator node object (for operator node).
+            </summary>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterNode.OperatorName">
+      <summary>
+            Name of the operator as used in the filter query.
+            </summary>
+      <remarks>
+            The name of the operator will be always be in lower case.
+            </remarks>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterNode.IsOperand">
+      <summary>
+            Indicates whether the node is an operand (as opposed to an operator).
+            </summary>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterNode.Operands">
+      <summary>
+            List of operands in the operand node.
+            </summary>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterNode.Property">
+      <summary>
+            The left-most operand in the <see cref="P:DotNetExtras.OData.ODataFilterNode.Operands">Operands</see> list (when applicable).
+            </summary>
+      <remarks>
+            Most property nodes have only one operand, but operands used in functions,
+            such as `startsWith` will have the first operand identifying the property
+            and the rest holding the values.
+            Some functions, such as `contains`, may have two operands mapped to properties,
+            such as in `contains(name, displayName)`, but in this case, the first operand
+            is still uses as a primary and therefore, only the first operand is returned.
+            </remarks>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterNode.GetOperand(System.Object)">
+      <summary>
+            Gets the operand name from a tree node.
+            </summary>
+      <param name="node">
+            OData filter tree node.
+            </param>
+      <returns>
+            Operand name.
+            </returns>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterNode.#ctor(System.Object,DotNetExtras.OData.ODataFilterNode,System.String)">
+      <summary>
+            Constructor.
+            </summary>
+      <param name="node">
+            Native OData filter node.
+            </param>
+      <param name="parent">
+            Parent node.
+            </param>
+      <param name="parentName">
+            Name of the parent from the 'any' or 'all' operation.
+            </param>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterNode.GetParentName(Microsoft.OData.UriParser.LambdaNode)">
+      <summary>
+            Get name of the parent property from the 'any' or 'all' operation.
+            </summary>
+      <param name="node">
+            Node corresponding to the 'any' or 'all' operation.
+            </param>
+      <returns>
+            Name of the parent.
+            </returns>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterNode.GetNode(System.Object)">
+      <summary>
+            Implements special handling for the convert node.
+            </summary>
+      <param name="node">
+            Any node.
+            </param>
+      <returns>
+            If the node is a convert node, returns the source; otherwise, returns the node.
+            </returns>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterNode.GetPropertyName(Microsoft.OData.UriParser.NonResourceRangeVariableReferenceNode,System.String)">
+      <summary>
+            Gets the name of the property from a specific node.
+            </summary>
+      <param name="node">
+            Tree node.
+            </param>
+      <param name="parentName">
+            Name of the parent from the 'any' or 'all' operation.
+            </param>
+      <returns>
+            Name of the property.
+            </returns>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterNode.GetPropertyName(Microsoft.OData.UriParser.CollectionComplexNode,System.String)">
+      <inheritdoc cref="M:DotNetExtras.OData.ODataFilterNode.GetPropertyName(Microsoft.OData.UriParser.NonResourceRangeVariableReferenceNode,System.String)" />
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterNode.GetPropertyName(Microsoft.OData.UriParser.CollectionNavigationNode,System.String)">
+      <inheritdoc cref="M:DotNetExtras.OData.ODataFilterNode.GetPropertyName(Microsoft.OData.UriParser.NonResourceRangeVariableReferenceNode,System.String)" />
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterNode.GetPropertyName(Microsoft.OData.UriParser.CollectionPropertyAccessNode,System.String)">
+      <inheritdoc cref="M:DotNetExtras.OData.ODataFilterNode.GetPropertyName(Microsoft.OData.UriParser.NonResourceRangeVariableReferenceNode,System.String)" />
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterNode.GetPropertyName(System.String,System.String)">
+      <inheritdoc cref="M:DotNetExtras.OData.ODataFilterNode.GetPropertyName(Microsoft.OData.UriParser.NonResourceRangeVariableReferenceNode,System.String)" />
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterNode.GetPropertyName(Microsoft.OData.UriParser.SingleComplexNode,System.String)">
+      <inheritdoc cref="M:DotNetExtras.OData.ODataFilterNode.GetPropertyName(Microsoft.OData.UriParser.NonResourceRangeVariableReferenceNode,System.String)" />
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterNode.GetPropertyName(Microsoft.OData.UriParser.SingleValuePropertyAccessNode,System.String)">
+      <inheritdoc cref="M:DotNetExtras.OData.ODataFilterNode.GetPropertyName(Microsoft.OData.UriParser.NonResourceRangeVariableReferenceNode,System.String)" />
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterNode.GetPropertyName(Microsoft.OData.UriParser.SingleValueOpenPropertyAccessNode,System.String)">
+      <inheritdoc cref="M:DotNetExtras.OData.ODataFilterNode.GetPropertyName(Microsoft.OData.UriParser.NonResourceRangeVariableReferenceNode,System.String)" />
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterNode.WriteLine(System.String,System.Object[])">
+      <summary>
+            Prints a line of text with proper indentation for the given node level.
+            </summary>
+      <param name="message">
+            Message or message format.
+            </param>
+      <param name="args">
+            Optional message arguments.
+            </param>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterNode.Print(System.Boolean,System.Boolean)">
+      <summary>
+            Prints node information to console.
+            </summary>
+      <param name="withLabels">
+            Indicates whether to print labels.
+            </param>
+      <param name="withNodeKind">
+            Indicates whether to print node type/kind.
+            </param>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterNode.FormatNodeType(System.Object,System.Boolean)">
+      <summary>
+            Formats the message with the node type info.
+            </summary>
+      <param name="node">
+            Node object.
+            </param>
+      <param name="withLabels">
+            Indicates whether to print labels.
+            </param>
+      <returns>
+            Formatted string.
+            </returns>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterNode.FormatOperator(System.Object,System.Boolean)">
+      <summary>
+            Formats the message with the operator name.
+            </summary>
+      <param name="name">
+            Name of the operator.
+            </param>
+      <param name="withLabels">
+            Indicates whether to print labels.
+            </param>
+      <returns>
+            Formatted string.
+            </returns>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterNode.FormatOperand(System.Object,System.Boolean)">
+      <summary>
+            Formats the message with the operand name (property name or value).
+            </summary>
+      <param name="operand">
+            Name of the operator.
+            </param>
+      <param name="withLabels">
+            Indicates whether to print labels.
+            </param>
+      <returns>
+            Formatted string.
+            </returns>
+    </member>
+    <member name="T:DotNetExtras.OData.ODataFilterNodeCount">
+      <summary>
+            Defines the minimum and maximum numbers.
+            </summary>
+      <remarks>
+            Initializes the instance with the minimum and maximum counts.
+            </remarks>
+      <param name="min">
+            Minimum number of occurrences (0 = optional).
+            </param>
+      <param name="max">
+            Maximum number of occurrences (0 = unlimited). 
+            </param>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterNodeCount.#ctor(System.Int32,System.Int32)">
+      <summary>
+            Defines the minimum and maximum numbers.
+            </summary>
+      <remarks>
+            Initializes the instance with the minimum and maximum counts.
+            </remarks>
+      <param name="min">
+            Minimum number of occurrences (0 = optional).
+            </param>
+      <param name="max">
+            Maximum number of occurrences (0 = unlimited). 
+            </param>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterNodeCount.#ctor">
+      <summary>
+            Initializes the instance with the default counts.
+            </summary>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterNodeCount.#ctor(System.Int32)">
+      <summary>
+            Initializes the instance with the required count (min=max).
+            </summary>
+      <param name="count">
+            Required count.
+            </param>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterNodeCount.Min">
+      <summary>
+            The minimum number of expected occurrences.
+            </summary>
+      <remarks>
+            Zero means optional.
+            </remarks>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterNodeCount.Max">
+      <summary>
+            The maximum number of expected occurrences.
+            </summary>
+      <remarks>
+            Zero means there is no maximum.
+            </remarks>
+    </member>
+    <member name="T:DotNetExtras.OData.ODataFilterRules">
+      <summary>
+            Defines collections of rules that can be applied to the operators and properties used in an OData filter expression.
+            </summary>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterRules.#ctor">
+      <summary>
+            Initializes instance with empty rules. 
+            </summary>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterRules.#ctor(System.Collections.Generic.Dictionary{System.String,DotNetExtras.OData.ODataFilterNodeCount},System.Collections.Generic.Dictionary{System.String,DotNetExtras.OData.ODataFilterNodeCount},System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.Dictionary{System.String,DotNetExtras.OData.ODataFilterNodeCount}})">
+      <summary>
+            Initializes instance with specific rules defined for operators and/or properties.
+            </summary>
+      <param name="operators">
+            Rules applied to the operators used in filter expression.
+            </param>
+      <param name="properties">
+            Rules applied to the properties used in the filter expression.
+            </param>
+      <param name="propertyOperators">
+            Rules applied to the operators and properties used in the filter expression,
+            </param>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterRules.Operators">
+      <summary>
+            Rules applied to operators used in the filter expression,
+            i.e. which operator can be used and how many times.
+            </summary>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterRules.Properties">
+      <summary>
+            Rules applied to properties used in the filter expression,
+            i.e. which property can be used and how many times.
+            </summary>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterRules.PropertyOperators">
+      <summary>
+            Rules applied to operators and properties used in the filter expression,
+            i.e. which operator can be used for which property and how many times.
+            </summary>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterRules.Deserialize(System.String)">
+      <summary>
+            Returns an instance deserialized from a JSON or text string.
+            </summary>
+      <param name="input">
+            JSON or text representation of the rules.
+            </param>
+      <returns>
+            Rules instance.
+            </returns>
+      <remarks>
+        <para>
+            When specifying the rules using a JSON string, it must reflect the structure of this class.
+            </para>
+        <para>
+            A text version of the rules must be in the format <em>rule1[|rule2[|rule3[|...]]]</em> where 
+            the rules are separated by the pipe (|) character.
+            Each rule must follow the format <em>{[o|p]:}name{:{min}{,}{max}}</em>, 
+            which only requires the name of the operator or property allowed in the OData filter expression
+            to be included in the string value. 
+            To explicitly mark the name as an operator or a property, 
+            prefix the name with <em>o:</em> or <em>p:</em> respectively (generally, the prefix is not required). 
+            To specify the minimum and/or maximum number of occurrences of the name or property 
+            in the filter expression, append them after the name followed by the colon (:) character.
+            If you only need to specify one non-default number, you can omit the other but keep the
+            comma (,) character separating the minimum number from the maximum number in place
+            (if you only specify one number without the comma, it will be interpreted as the 
+            required number of occurrences, i.e. min=max).
+            The maximum number of 0 means there is no maximum.
+            If no minimum or maximum number is specified, the operator or property is considered optional
+            (i.e. it is allowed but not required).
+            Example: <em>eq|and:2,|o:ne:1,2|startsWith:1|type:,5|p:name/givenName:2</em></para>
+      </remarks>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterRules.ParseTextRule(System.String,System.Boolean@,System.String@,System.Int32@,System.Int32@)">
+      <summary>
+            Indicates whether the name belongs to an operator or a property
+            and populates the name, min, and max values.
+            </summary>
+      <param name="input">
+            A single rule in a text form.
+            </param>
+      <param name="isOperator">
+            Returns the flag indicating whether the rule applies to an operator or a property.
+            </param>
+      <param name="name">
+            Returned name.
+            </param>
+      <param name="min">
+            Detected minimum number of the occurrences.
+            </param>
+      <param name="max">
+            Detected maximum number of occurrences.
+            </param>
+      <returns>
+            Indicates if the rule applies and the extracted name belongs to an operator.
+            </returns>
+    </member>
+    <member name="T:DotNetExtras.OData.ODataFilterTree`1">
+      <summary>
+            Implements a binary tree that holds the OData filter expression.
+            </summary>
+      <typeparam name="T">
+            Data type of the primary object used as a model for the filter expression.
+            </typeparam>
+      <remarks>
+            Adapted from <see href="https://devblogs.microsoft.com/odata/tutorial-sample-using-odatauriparser-for-odata-v4/" />.
+            See also <see href="https://stackoverflow.com/questions/69317761/how-use-odata-filters-with-swagger-in-an-asp-net-core-webapi-projec" />
+            (could not make it work with dependency injection).
+            </remarks>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterTree`1.Expression">
+      <summary>
+            Text of the OData filter expression.
+            </summary>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterTree`1.Root">
+      <summary>
+            Root node of the expression tree.
+            </summary>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterTree`1.SchemaElements">
+      <summary>
+            Elements (data types) that are or may be reference by the filter expression.
+            </summary>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterTree`1.Operators">
+      <summary>
+            Returns the list of the operators used in the filter expression.
+            </summary>
+      <remarks>
+            This list may contain duplicates.
+            </remarks>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterTree`1.Properties">
+      <summary>
+            Returns the list of the properties used in the filter expression as a primary subject.
+            </summary>
+      <remarks>
+            This list may contain duplicates.
+            The list will exclude names of properties used as objects in the logical expressions,
+            unless they can be swapped in the expression without affecting the behavior of the filter. 
+            For example, given the expression `contains(name, displayName)`, 
+            `displayName` will not be returned 
+            because swapping the expression operands will change the meaning 
+            (`contains(name, displayName)` does not equal `contains(displayName, name)`).
+            However, in the expression `name eq displayName`,
+            both `name` and `displayName` will be returned
+            (`name eq displayName` equals `displayName eq name`)
+            </remarks>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterTree`1.PropertyOperators">
+      <summary>
+            Dictionary of operators applied to properties in the filter expression.
+            </summary>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterTree`1.#ctor(System.String)">
+      <summary>
+            Constructor.
+            </summary>
+      <param name="expression">
+            Text of the filter expression.
+            </param>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterTree`1.PrintDetails(System.Int32)">
+      <summary>
+            Prints operators and properties of the parsed OData filter expression tree.
+            </summary>
+      <param name="lineLength">
+            Number of characters in the printed horizontal lines.
+            </param>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterTree`1.PrintSchema">
+      <summary>
+            Prints schema elements (data types) that are or may be reference by the OData filter expression.
+            </summary>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterTree`1.PrintTree(System.Boolean,System.Boolean,System.Boolean,System.Int32)">
+      <summary>
+            Prints parsed filter expression tree.
+            </summary>
+      <param name="withLabels">
+            Specifies whether to print node labels.
+            </param>
+      <param name="withNodeKind">
+            Specifies whether to print node types.
+            </param>
+      <param name="withDetails">
+            Specifies whether to print operators and properties of the parsed OData filter expression tree..
+            </param>
+      <param name="lineLength">
+            Specifies line length for the printed horizontal lines.
+            </param>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterTree`1.Print(System.Boolean,System.Boolean,System.Boolean)">
+      <summary>
+            Prints tree to console.
+            </summary>
+      <param name="withSchema">
+            Specifies whether to print schema elements (data types) that are or may be reference by the OData filter expression. 
+            </param>
+      <param name="withLabels">
+            Specifies whether to print node labels.
+            </param>
+      <param name="withNodeKind">
+            Specifies whether to print node types.
+            </param>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterTree`1.GetOperators">
+      <summary>
+            Gets the names of the operators in the tree.
+            </summary>
+      <returns>
+            Names of the operators in the tree.
+            </returns>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterTree`1.GetOperators(DotNetExtras.OData.ODataFilterNode,System.Collections.Generic.List{System.String})">
+      <summary>
+            Recursively gets the names of the operators in the specified node and its subtrees.
+            </summary>
+      <param name="node">
+            Starting node.
+            </param>
+      <param name="names">
+            Names of the operators in the node and its subtree.
+            </param>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterTree`1.GetProperties">
+      <summary>
+            Gets the names of the properties in the tree.
+            </summary>
+      <returns>
+            Names of the properties in the tree.
+            </returns>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterTree`1.GetProperties(DotNetExtras.OData.ODataFilterNode,System.Collections.Generic.List{System.String})">
+      <summary>
+            Recursively gets the names of the properties in the specified node and its subtrees.
+            </summary>
+      <param name="node">
+            Starting node.
+            </param>
+      <param name="names">
+            Names of the properties in the node and its subtree.
+            </param>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterTree`1.GetPropertyOperators(DotNetExtras.OData.ODataFilterNode,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.List{System.String}})">
+      <summary>
+            Recursively gets the names of the properties and all operators applied to each name.
+            </summary>
+      <param name="node">
+            Starting node.
+            </param>
+      <param name="propertyOperators">
+            Maps properties to operators applied to them.
+            </param>
+    </member>
+    <member name="T:DotNetExtras.OData.ODataFilterValidator`1">
+      <summary>
+            Validates OData filter expression for the given data type and the set of rules.
+            </summary>
+      <typeparam name="T">
+            Data type of the primary object used as a model for the OData filter expression.
+            </typeparam>
+      <remarks>
+            For the format of the rules, see <see cref="M:DotNetExtras.OData.ODataFilterRules.Deserialize(System.String)" /> documentation.
+            </remarks>
+      <example>
+            /// <code><![CDATA[
+            string filter = "Type eq 'Employee' and startsWith(name/givenName, 'john') and name/givenName ne 'Johnson'";
+            string rules  = "eq|and:2|o:ne:1,2|startsWith:1|type:,5|p:name/givenName:2,";
+            
+            ODataFilterValidator<User> validator = new(filter, rules);
+            
+            if (validator.Failed)
+            {
+                Console.WriteLine(validator.Details);
+            }
+            ]]></code></example>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterValidator`1.Errors">
+      <summary>
+            Errors encountered during validation.
+            </summary>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterValidator`1.Passed">
+      <summary>
+            Indicates whether validation passed.
+            </summary>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterValidator`1.Failed">
+      <summary>
+            Indicates whether validation failed.
+            </summary>
+    </member>
+    <member name="P:DotNetExtras.OData.ODataFilterValidator`1.Details">
+      <summary>
+            Errors encountered during validation and serialized as a single string.
+            </summary>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterValidator`1.#ctor(System.String,System.String)">
+      <summary>
+            Initializes instance for the rules serialized as a JSON or text string.
+            </summary>
+      <param name="filter">
+            OData filter expression.
+            </param>
+      <param name="rules">
+            Serialized rules (<see cref="M:DotNetExtras.OData.ODataFilterRules.Deserialize(System.String)" />).
+            </param>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterValidator`1.#ctor(System.String,DotNetExtras.OData.ODataFilterRules)">
+      <summary>
+            Initializes instance for the specified rules.
+            </summary>
+      <param name="filter">
+            OData filter expression.
+            </param>
+      <param name="rules">
+            Strongly typed rules.
+            </param>
+    </member>
+    <member name="M:DotNetExtras.OData.ODataFilterValidator`1.Initialize(System.String,DotNetExtras.OData.ODataFilterRules)">
+      <summary>
+            Initializes instance.
+            </summary>
+      <param name="filter">
+            OData filter expression.
+            </param>
+      <param name="rules">
+            Strongly typed rules.
+            </param>
+      <exception cref="T:System.Exception">
+      </exception>
+    </member>
+    <member name="N:DotNetExtras.OData">
+      <summary>Provides classes for parsing and validating OData filter expressions.</summary>
+    </member>
+  </members>
+</doc>
