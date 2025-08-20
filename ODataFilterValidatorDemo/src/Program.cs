@@ -5,19 +5,19 @@ using ODataSampleModels;
 Dictionary<string, List<string>> _data = new()
 {
     {
-    //    "email eq 'a@b.com'",
-    //    new List<string>()
-    //    {
-    //        "email",
-    //        "email:1,1",
-    //        "email:1,1|eq:1,1",
-    //        "email[eq]:1,1",
-    //        "eq:,1|email[eq]:1,1",
-    //        "email[ne]:0,1|email[eq]:1,1",
-    //        "email[ne]:1,1|email[eq]:0,1"
-    //    }
-    //},
-    //{
+        "email eq 'a@b.com'",
+        new List<string>()
+        {
+            "email",
+            "email:1,1",
+            "email:1,1|eq:1,1",
+            "email[eq]:1,1",
+            "eq:,1|email[eq]:1,1",
+            "email[ne]:0,1|email[eq]:1,1",
+            "email[ne]:1,1|email[eq]:0,1"
+        }
+    },
+    {
         "email eq 'a@b.com' and startsWith(email, name/givenName)",
         new List<string>()
         {
@@ -31,35 +31,35 @@ Dictionary<string, List<string>> _data = new()
             "email[eq]|email[startswith]|email[and]",
             "email[eq]"
         }
-    //},
-    //{
-    //    "socialLogins/any(s: s/name eq 'Facebook')",
-    //    new List<string>()
-    //    {
-    //        "any:,1|eq:,2|socialLogins/name:,1",
-    //    }
-    //},
-    //{
-    //    "Type eq 'Employee' and startsWith(name/givenName, 'john') and name/givenName ne 'Johnson'",
-    //    new List<string>()
-    //    {
-    //        @"{""Operators"":{""eq"":null,""and"":null,""ne"":null,""startsWith"":null}," +
-    //            @"""Properties"":{""type"":null,""name/givenName"":null}}",
+    },
+    {
+        "socialLogins/any(s: s/name eq 'Facebook')",
+        new List<string>()
+        {
+            "any:,1|eq:,2|socialLogins/name:,1",
+        }
+    },
+    {
+        "Type eq 'Employee' and startsWith(name/givenName, 'john') and name/givenName ne 'Johnson'",
+        new List<string>()
+        {
+            @"{""Operators"":{""eq"":null,""and"":null,""ne"":null,""startsWith"":null}," +
+                @"""Properties"":{""type"":null,""name/givenName"":null}}",
 
-    //        @"{""Operators"":{""eq"":{""min"":1},""and"":null,""ne"":null,""startsWith"":null}," +
-    //            @"""Properties"":{""type"":{""min"":1},""name/givenName"":{""min"":1}}}",
+            @"{""Operators"":{""eq"":{""min"":1},""and"":null,""ne"":null,""startsWith"":null}," +
+                @"""Properties"":{""type"":{""min"":1},""name/givenName"":{""min"":1}}}",
 
-    //        @"{""Operators"":{""eq"":null,""and"":null,""ne"":null,""endsWith"":null}," +
-    //            @"""Properties"":{""type"":null,""name/givenName"":null}}",
+            @"{""Operators"":{""eq"":null,""and"":null,""ne"":null,""endsWith"":null}," +
+                @"""Properties"":{""type"":null,""name/givenName"":null}}",
 
-    //        "eq|and|ne|startsWith|type|name/givenName",
+            "eq|and|ne|startsWith|type|name/givenName",
 
-    //        "eq|and|ne|startsWith|type:,5|name/givenName",
+            "eq|and|ne|startsWith|type:,5|name/givenName",
 
-    //        "eq|and:2|o:ne:1,2|startsWith:1|type:,5|p:name/givenName:2,",
+            "eq|and:2|o:ne:1,2|startsWith:1|type:,5|p:name/givenName:2,",
 
-    //        "eq|and:2|o:ne:1,2|startsWith:1|type:,5|p:name/givenName:2,",
-    //    }
+            "eq|and:2|o:ne:1,2|startsWith:1|type:,5|p:name/givenName:2,",
+        }
     }
 };
 #endregion

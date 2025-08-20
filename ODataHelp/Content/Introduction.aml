@@ -11,9 +11,173 @@
       </para>
     </introduction>
 
+    <section address="Overview">
+      <title>Overview</title>
+      <content>
+        <para>
+          The <legacyItalic>DotNetExtras.OData</legacyItalic> library can be useful if your application needs to parse and/or validate <externalLink><linkText>OData</linkText><linkUri>https://learn.microsoft.com/en-us/dynamics365/business-central/dev-itpro/webservices/use-filter-expressions-in-odata-uris</linkUri></externalLink> filter expressions. While the parsing functionality is mostly for demonstration purposes, the validation functionality can be used to ensure that the filter expressions are valid before they are sent to a custom OData service.
+        </para>
+      </content>
+      
+      <sections>
+        
+        <section address="Implementation">
+          <title>Implementation</title>
+            <content>
+              <para>
+                OData filter expressions apply data types. For example, if an application implements a REST API that supports OData filters to allow callers to search for users based on some criteria, then the filter should apply to the data type implementing the user or a subset of user properties that should be allowed in the filter query.
+              </para>
+              <para>
+                To validate the OData filter query before processing it or passing it to another service, the application can use the <codeInline>ODataFilterValidator</codeInline> class which will check the filter query against the basic OData filter query syntax. <codeInline>ODataFilterValidator</codeInline> will also make sure that only properties defined for the filter-specific type are used in the expression. The validator also supports custom rules that can further restrict the filter query to only allow certain properties or values.
+              </para>
+              <para>
+                The validation rules can be used to enforce:
+              </para>
+              <list class="bullet">
+                <listItem><para>Allowed operators and the minimum and maximum number each operator can be used.</para></listItem>
+                <listItem><para>Allowed properties and the minimum and maximum number of times each property can be used.</para></listItem>
+                <listItem><para>Allowed operators that can be used with each property and the minimum and maximum number of times each operator can be used with each property.</para></listItem>
+              </list>
+              <para>
+                To validate a filter expression, pass the value to the <codeInline>ODataFilterValidator</codeInline> constructor class and check the <codeInline>Passed</codeInline> or <codeInline>Failed</codeInline> property. If validation fails, the <codeInline>Errors</codeInline> property will contain a list of errors describing the issues with the filter expression.
+              </para>
+            </content>
+        </section>
+        
+        <section address="Rules">
+          <title>Rules</title>
+            <content>
+              <para>
+                The validation rules can be specified via:
+              </para>
+              <list class="ordered">
+                <listItem><para>A <codeInline>ODataFilterRules</codeInline> object.</para></listItem>
+                <listItem><para>A JSON string representing a serialized instance of a <codeInline>ODataFilterRules</codeInline> object.</para></listItem>
+                <listItem><para>A shortcut notation representing the rules.</para></listItem>
+              </list>
+              <para>
+                Let's dissect the shortcut notation because it may not be obvious and it seems like the best option for use in the applications.
+              </para>
+            </content>
+        </section>
+        
+        <section address="Syntax">
+          <title>Syntax</title>
+            <content>
+              <para>
+                The shortcut notation allows you to specify the rules in a concise way. The syntax is as follows:
+              </para>
+              <list class="bullet">
+                <listItem><para>Multiple rules are separated by the pipe (<codeInline>|</codeInline>) characters.</para></listItem>
+                <listItem><para>Each rule defines the explicit restrictions applied to one of the following categories:</para></listItem>
+                <listItem>
+                  <list class="bullet">
+                    <listItem><para>Operators</para></listItem>
+                    <listItem><para>Properties</para></listItem>
+                    <listItem><para>Operators applied to a property</para></listItem>
+                  </list>
+                </listItem>
+                <listItem><para>If no rule is defined for a particular category, all possible entries of this category will be allowed. If at least one rule is defined for a particular category, then only explicitly defined members of the category will be allowed. For example, if a rule only mentions two properties, then only these two properties will be allowed in the expression; however, all operators will be allowed.</para></listItem>
+                <listItem><para>The minimum and maximum number of occurrences in the filter expression can be defined after a colon (<codeInline>:</codeInline>) and separated by a comma (<codeInline>,</codeInline>), e.g. <codeInline>eq:1,2</codeInline> (require the <codeInline>eq</codeInline> operator to be used in the expression at least once and at most two times). Each number is optional and can be omitted, e.g. <codeInline>eq:1,</codeInline> (require the <codeInline>eq</codeInline> operator to be used in the expression at least once) or <codeInline>eq:,1</codeInline> (allow the <codeInline>eq</codeInline> operator to be used in the expression at most once; since there is no minimum number, it is not required).</para></listItem>
+                <listItem><para>To add a restriction for an operator that should be allowed to be used with a property, put the name of the operator inside of the square brackets (<codeInline>[]</codeInline>) after the property name (the minimum and maximum occurrence numbers will apply to the number of times the operator is used with the property, e.g. <codeInline>type[eq]:1,1</codeInline> (require the filter to include the <codeInline>type eq</codeInline> expression exactly once).</para></listItem>
+                <listItem><para>It should never be the case, but if the name of a property conflicts with the name of an OData operator, a prefix hint (<codeInline>o:</codeInline> for an operator or <codeInline>p:</codeInline> for a property) must be used in the rule, e.g. <codeInline>p:type:1,1|o:eq:1,1</codeInline>.</para></listItem>
+              </list>
+              <para>
+              </para>
+            </content>
+        </section>
+        
+        <section address="Example">
+          <title>Example</title>
+            <content>
+              <para>
+               The following examples show how to validate OData filter expressions.
+              </para>
+              <code language="cs" title="Validate filter expression without rules and print errors">
+<![CDATA[
+using DotNetExtras.OData;
+...
+
+// Just validate the basic syntax of the filter expression.
+ODataFilterValidator<User> validator = new("user/loginId eq 'test'");
+
+if (validator.Failed)
+{
+    Console.WriteLine(string.Join(" ", validator.Errors));
+}
+]]>
+              </code>
+              <code language="cs" title="Validate filter expression with rules and print errors">
+<![CDATA[
+using DotNetExtras.OData;
+...
+
+// Validate the syntax of the filter expression and enforce the 'startsWith(loginId, ...)' query.
+ODataFilterValidator<User> validator = new("startsWith(loginId, 'test')", "loginId[startsWith]:1,1");
+
+if (validator.Failed)
+{
+    Console.WriteLine(string.Join(" ", validator.Errors));
+}
+]]>
+              </code>
+              <para>
+                The following examples illustrate the formats of the filter validation rules:
+              </para>
+              <code title="Explicit restrictions for operators (no min/max)">
+                eq|startsWith|and
+              </code>
+              <para>
+                Allowed operators: <codeInline>eq</codeInline>, <codeInline>startsWith</codeInline>, <codeInline>and</codeInline>. Any property can be used.
+              </para>
+              <para>---</para>
+              <code title="Explicit restrictions for properties (no min/max)">
+                email|address/country|phone/countryPrefix
+              </code>
+              <para>
+                Allowed properties: <codeInline>email</codeInline>, <codeInline>address.country</codeInline>, <codeInline>phone.countryPrefix</codeInline>.
+              </para>
+              <para>---</para>
+              <code title="Explicit restrictions for operators and properties (with min/max)">
+                eq:,1|startsWith:,1|and:,1|loginId:1,1|givenName:,1
+              </code>
+              <para>
+                Allowed operators: <codeInline>eq</codeInline>, <codeInline>startsWith</codeInline>, <codeInline>and</codeInline> (each can be used at most once). Required property: <codeInline>loginId</codeInline> (must be used once). Optional property: <codeInline>givenName</codeInline> (can be used at most once).
+              </para>
+              <para>---</para>
+              <code title="Explicit restrictions for operators allowed to be used with properties (with and without min/max)">
+                type[eq]:1,1|type[and]:1,1|name[eq]:,1|name[startsWith]:,1|name[and]:,1|loginId[eq,and]:,2|givenName[eq,startsWith]:,2
+              </code>
+              <para>
+                Required expression:<codeInline>type eq ... and</codeInline>. Allowed expressions: <codeInline>name eq ...</codeInline>, <codeInline>startsWith(name, ...)</codeInline>, <codeInline>loginId eq ...</codeInline>, <codeInline>givenName eq ...</codeInline> (each can be used at most once). Optional expressions can be combined using the logical operator <codeInline>and</codeInline>. Notice that when combining multiple operators for one property, the maximum number must be adjusted to accommodate both counts.
+              </para>
+              <para>---</para>
+              <para>             
+                For the complete example and other samples covering additional scenarios, see the source code (and read the comments) of the 
+                <externalLink>
+                  <linkText>filter parser</linkText>
+                  <linkUri>https://github.com/alekdavis/dotnet-extras-odata/tree/main/ODataFilterParserDemo</linkUri>
+                  <linkTarget>_blank</linkTarget>
+                </externalLink> and 
+                <externalLink>
+                  <linkText>filter validator</linkText>
+                  <linkUri>https://github.com/alekdavis/dotnet-extras-odata/tree/main/ODataFilterValidatorDemo</linkUri>
+                  <linkTarget>_blank</linkTarget>
+                </externalLink> projects. More examples can be also found in the <externalLink>
+                  <linkText>unit tests</linkText>
+                  <linkUri>https://github.com/alekdavis/dotnet-extras-odata/tree/main/ODataTests</linkUri>
+                  <linkTarget>_blank</linkTarget>
+                </externalLink> 
+              </para>
+            </content>
+        </section>
+    
+      </sections>     
+    </section>
+
     <relatedTopics>
       <externalLink>
-        <linkText>DotNetExtras.OData Nuget package</linkText>
+        <linkText>DotNetExtras.OData NuGet package</linkText>
         <linkUri>https://www.nuget.org/packages/DotNetExtras.OData</linkUri>
       </externalLink>
     </relatedTopics>
