@@ -51,7 +51,7 @@
                 The validation rules can be specified via:
               </para>
               <list class="ordered">
-                <listItem><para>A <codeInline>ODataFilterRules</codeInline> object.</para></listItem>
+                <listItem><para>An <codeInline>ODataFilterRules</codeInline> object.</para></listItem>
                 <listItem><para>A JSON string representing a serialized instance of a <codeInline>ODataFilterRules</codeInline> object.</para></listItem>
                 <listItem><para>A shortcut notation representing the rules.</para></listItem>
               </list>
@@ -87,8 +87,8 @@
             </content>
         </section>
         
-        <section address="Example">
-          <title>Example</title>
+        <section address="Examples">
+          <title>Examples</title>
             <content>
               <para>
                The following examples show how to validate OData filter expressions.
@@ -121,37 +121,45 @@ if (validator.Failed)
 }
 ]]>
               </code>
+            </content>
+        </section>
+        
+        <section address="Shortcuts">
+          <title>Shortcuts</title>
+            <content>
+              
               <para>
-                The following examples illustrate the formats of the filter validation rules:
+                The following examples illustrate the formats of the filter validation rules in the shortcut forms:
               </para>
-              <code title="Explicit restrictions for operators (no min/max)">
+              <code language="none" title="Explicit restrictions for operators (no min/max)">
                 eq|startsWith|and
               </code>
               <para>
                 Allowed operators: <codeInline>eq</codeInline>, <codeInline>startsWith</codeInline>, <codeInline>and</codeInline>. Any property can be used.
               </para>
-              <para>---</para>
-              <code title="Explicit restrictions for properties (no min/max)">
+              <code language="none" title="Explicit restrictions for properties (no min/max)">
                 email|address/country|phone/countryPrefix
               </code>
               <para>
                 Allowed properties: <codeInline>email</codeInline>, <codeInline>address.country</codeInline>, <codeInline>phone.countryPrefix</codeInline>.
               </para>
-              <para>---</para>
-              <code title="Explicit restrictions for operators and properties (with min/max)">
+              <code language="none" title="Explicit restrictions for operators and properties (with min/max)">
                 eq:,1|startsWith:,1|and:,1|loginId:1,1|givenName:,1
               </code>
               <para>
                 Allowed operators: <codeInline>eq</codeInline>, <codeInline>startsWith</codeInline>, <codeInline>and</codeInline> (each can be used at most once). Required property: <codeInline>loginId</codeInline> (must be used once). Optional property: <codeInline>givenName</codeInline> (can be used at most once).
               </para>
-              <para>---</para>
-              <code title="Explicit restrictions for operators allowed to be used with properties (with and without min/max)">
+              <code language="none" title="Explicit restrictions for operators allowed to be used with properties (with and without min/max)">
                 type[eq]:1,1|type[and]:1,1|name[eq]:,1|name[startsWith]:,1|name[and]:,1|loginId[eq,and]:,2|givenName[eq,startsWith]:,2
               </code>
               <para>
-                Required expression:<codeInline>type eq ... and</codeInline>. Allowed expressions: <codeInline>name eq ...</codeInline>, <codeInline>startsWith(name, ...)</codeInline>, <codeInline>loginId eq ...</codeInline>, <codeInline>givenName eq ...</codeInline> (each can be used at most once). Optional expressions can be combined using the logical operator <codeInline>and</codeInline>. Notice that when combining multiple operators for one property, the maximum number must be adjusted to accommodate both counts.
+                Required expression: <codeInline>type eq ... and</codeInline>. Allowed expressions: <codeInline>name eq ...</codeInline>, <codeInline>startsWith(name, ...)</codeInline>, <codeInline>loginId eq ...</codeInline>, <codeInline>givenName eq ...</codeInline> (each can be used at most once). Optional expressions can be combined using the logical operator <codeInline>and</codeInline>. Notice that when combining multiple operators for one property, the maximum number must be adjusted to accommodate both counts.
               </para>
-              <para>---</para>
+            </content>
+        </section>
+        <section address="More">
+          <title>More</title>
+          <content>
               <para>             
                 For the complete example and other samples covering additional scenarios, see the source code (and read the comments) of the 
                 <externalLink>

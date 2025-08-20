@@ -4,7 +4,7 @@
 
 Use the `DotNetExtras.OData` library to:
 
-- Parse OData the filter expressions tree.
+- Parse the OData filter expressions tree.
 - Validate a given filter against the custom rules.
 
 By default, the library can check if a filter expression uses valid OData syntax (based on the Microsoft's implementation) for the given data type. In particular, it validates that the filter expression uses:
@@ -17,8 +17,6 @@ To extend the default validation capabilities, use custom rules to specify:
 - Allowed operators in the filter expression and the minimum and maximum number each operator can be used.
 - Allowed properties in the filter expression and the minimum and maximum number of times each property can be used.
 - Allowed operators that can be used with each property and the minimum and maximum number of times each operator can be used with each property.
-
-The `DotNetExtras.OData` library's implementation of the OData filter validation rules is not based on any official specification (since there isn't any), but it is simple enough and easy to implement the basic checks beyond the defaults. The documentation site provides a detailed explanation of the rules syntax. You can find several examples in the unit test and demo projects.
 
 ## Disclaimer
 
