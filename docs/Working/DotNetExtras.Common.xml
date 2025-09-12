@@ -497,6 +497,9 @@
             </example>
         </member>
         <member name="M:DotNetExtras.Common.Extensions.ObjectExtensions.IsEquivalentTo(System.Object,System.Object,System.Boolean)">
+            <inheritdoc cref="M:DotNetExtras.Common.Extensions.ObjectExtensions.IsEquivalentOf(System.Object,System.Object,System.Boolean)" />
+        </member>
+        <member name="M:DotNetExtras.Common.Extensions.ObjectExtensions.IsEquivalentOf(System.Object,System.Object,System.Boolean)">
             <summary>
             Checks if the source object is identical to the target (comparing all instance properties and fields). 
             </summary>
@@ -560,16 +563,19 @@
                 },
             };
             
-            Assert.True(source.IsEquivalentTo(target));
-            Assert.True(target.IsEquivalentTo(source));
+            Assert.True(source.IsEquivalentOf(target));
+            Assert.True(target.IsEquivalentOf(source));
             </code>
             </example>
-            <seealso cref="M:DotNetExtras.Common.Extensions.ObjectExtensions.IsPartiallyEquivalentTo(System.Object,System.Object,System.Boolean)"/>
+            <seealso cref="M:DotNetExtras.Common.Extensions.ObjectExtensions.IsPartialEquivalentOf(System.Object,System.Object,System.Boolean)"/>
         </member>
         <member name="M:DotNetExtras.Common.Extensions.ObjectExtensions.IsPartiallyEquivalentTo(System.Object,System.Object,System.Boolean)">
-            <inheritdoc cref="M:DotNetExtras.Common.Extensions.ObjectExtensions.IsPartialEquivalentTo(System.Object,System.Object,System.Boolean)" />
+            <inheritdoc cref="M:DotNetExtras.Common.Extensions.ObjectExtensions.IsPartialEquivalentOf(System.Object,System.Object,System.Boolean)" />
         </member>
         <member name="M:DotNetExtras.Common.Extensions.ObjectExtensions.IsPartialEquivalentTo(System.Object,System.Object,System.Boolean)">
+            <inheritdoc cref="M:DotNetExtras.Common.Extensions.ObjectExtensions.IsPartialEquivalentOf(System.Object,System.Object,System.Boolean)" />
+        </member>
+        <member name="M:DotNetExtras.Common.Extensions.ObjectExtensions.IsPartialEquivalentOf(System.Object,System.Object,System.Boolean)">
             <summary>
             Checks if the source value is <c>null</c> or an equivalent of a target value;
             or if every element of a source array, list or dictionary is a subset of the corresponding target array, list or dictionary,
@@ -585,7 +591,7 @@
             If <c>true</c>, non-public properties and fields will be checked along with the public properties and fields.
             </param>
             <returns>
-            True if the source objects is <c>null</c>, equivalent or a subset of the target; otherwise, <c>false</c>>.
+            True if the source objects is <c>null</c>, equivalent or a subset of the target; otherwise, <c>false</c>.
             </returns>
             <remarks>
             <para>
@@ -640,12 +646,12 @@
                 },
             };
             
-            Assert.True(source.IsPartialEquivalentTo(target1));
-            Assert.False(target1.IsPartialEquivalentTo(source));
-            Assert.False(source.IsPartialEquivalentTo(target2));
+            Assert.True(source.IsPartialEquivalentOf(target1));
+            Assert.False(target1.IsPartialEquivalentOf(source));
+            Assert.False(source.IsPartialEquivalentOf(target2));
             </code>
             </example>
-            <seealso cref="M:DotNetExtras.Common.Extensions.ObjectExtensions.IsEquivalentTo(System.Object,System.Object,System.Boolean)"/>"/>
+            <seealso cref="M:DotNetExtras.Common.Extensions.ObjectExtensions.IsEquivalentOf(System.Object,System.Object,System.Boolean)"/>"/>
         </member>
         <member name="M:DotNetExtras.Common.Extensions.ObjectExtensions.IsEmptyValue(System.Object)">
             <summary>
@@ -723,8 +729,40 @@
             </returns>
             <example>
             <code>
-            // PRINTS: "Hello, world."
+            // PRINTS: Hello, world.
             Console.WriteLine(" Hello, world  ".ToSentence());
+            </code>
+            </example>
+        </member>
+        <member name="M:DotNetExtras.Common.Extensions.StringExtensions.Mask(System.String,System.Char,System.Int32,System.Int32)">
+            <summary>
+            Masks characters in the input string allowing to keep the specified number of
+            characters in the beginning and/or end of the string unmasked.
+            </summary>
+            <param name="input">
+            Input string.
+            </param>
+            <param name="maskChar">
+            Mask character.
+            </param>
+            <param name="keepCharsStart">
+            Number of characters at the beginning of the string to keep unmasked.
+            </param>
+            <param name="keepCharsEnd">
+            Number of characters at the end of the string to keep unmasked.
+            </param>
+            <returns>
+            Masked string.
+            </returns>
+            <remarks>
+            Depending if the input string is shorter than the sum of the characters
+            to be kept unmasked in the beginning and/or end of the input string
+            then the original string will be returned as-is.
+            </remarks>
+            <example>
+            <code>
+            // PRINTS: He#########d!
+            Console.WriteLine("Hello, world!".Mask('#', 2, 1));
             </code>
             </example>
         </member>
@@ -778,12 +816,75 @@
             for object cloning.
             </remarks>
         </member>
+        <member name="T:DotNetExtras.Common.Json.Converters.JsonObjectAsPrimitiveConverter">
+            <summary>
+            Converts JSON objects to the corresponding primitive types when possible during JSON deserialization
+            via the <code>System.Text.Json</code> (STJ) operations.
+            </summary>
+            <remarks>
+            <para>
+            The deserialization routine will try to convert JSON objects to the following primitive types:
+            </para>
+            <list type="bullet">
+            <item><para>Boolean (true/false)</para></item>
+            <item><para>Numeric (integer, long, decimal, double; depending on the value and precision)</para></item>
+            <item><para>Date and time offset (converted from the string value)</para></item>
+            <item><para>Date and time (converted from the string value)</para></item>
+            <item><para>String</para></item>
+            <item><para>List (of objects)</para></item>
+            <item><para>Dictionary (string key, object value)</para></item>
+            </list>
+            <para>
+            Keep in mind that this converter is only applied when the target property type is <see cref="T:System.Object"/>.
+            The code logic will attempt to guess what the most appropriate type for the value would be 
+            by attempting to perform conversions to the above mentioned primitive types.
+            </para>
+            <para>
+            The code was adapted from 
+            <see href="https://stackoverflow.com/a/65974452/52545"/>
+            and
+            <see href="https://learn.microsoft.com/en-us/dotnet/standard/serialization/system-text-json/converters-how-to#deserialize-inferred-types-to-object-properties"/>.
+            </para>
+            </remarks>
+        </member>
+        <member name="M:DotNetExtras.Common.Json.Converters.JsonObjectAsPrimitiveConverter.Write(System.Text.Json.Utf8JsonWriter,System.Object,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Writes the specified object value as JSON using the provided <see cref="T:System.Text.Json.Utf8JsonWriter"/>.
+            </summary>
+            <param name="writer">
+            The <see cref="T:System.Text.Json.Utf8JsonWriter"/> to which the JSON representation of the value will be written.
+            </param>
+            <param name="value">
+            The object to write. If <c>null</c>, a JSON null value is written.
+            </param>
+            <param name="options">
+            The <see cref="T:System.Text.Json.JsonSerializerOptions"/> to use when serializing the value. Can be <c>null</c>.
+            </param>
+        </member>
+        <member name="M:DotNetExtras.Common.Json.Converters.JsonObjectAsPrimitiveConverter.Read(System.Text.Json.Utf8JsonReader@,System.Type,System.Text.Json.JsonSerializerOptions)">
+            <summary>
+            Reads and converts JSON element to a .NET object based on the JSON token type.
+            </summary>
+            <param name="reader">
+            The <see cref="T:System.Text.Json.Utf8JsonReader"/> to read from.
+            </param>
+            <param name="typeToConvert">
+            The target <see cref="T:System.Type"/> to convert the JSON data to
+            (in this case, it is always <see cref="T:System.Object"/>).
+            </param>
+            <param name="options">
+            The <see cref="T:System.Text.Json.JsonSerializerOptions"/> to use during deserialization.
+            </param>
+            <returns>
+            A .NET object representing the JSON data.
+            </returns>
+        </member>
         <member name="T:DotNetExtras.Common.Json.JsonExtensions">
             <summary>
             Implements extension methods for data conversion to and from JSON strings.
             </summary>
         </member>
-        <member name="M:DotNetExtras.Common.Json.JsonExtensions.ToJson(System.Object,System.Boolean)">
+        <member name="M:DotNetExtras.Common.Json.JsonExtensions.ToJson(System.Object,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
             Converts an object to a JSON string.
             </summary>
@@ -792,6 +893,15 @@
             </param>
             <param name="indented">
             If true, serialized JSON elements will be indented.
+            </param>
+            <param name="useOriginalCase">
+            If <c>true</c>, the original property names will be used
+            (unless they are overwritten by the JSON serialization attributes);
+            otherwise, the <c>camelCase</c> notation will be used.
+            </param>
+            <param name="includeNullValues">
+            If <c>true</c>, properties with null values will be included;
+            otherwise, they will be ignored.
             </param>
             <returns>
             JSON string.
@@ -822,8 +932,15 @@
             Converted value or default if conversion failed.
             </returns>
             <remarks>
+            <para>
             Enumerated properties in the JSON string are assumed to hold the 
             field names, i.e. string, not integer, values.
+            </para>
+            <para>
+            If the property being set is of type <see cref="T:System.Object"/>,
+            this method will attempt to convert the JSON value to the most appropriate
+            primitive type, list, or collection type using <see cref="T:DotNetExtras.Common.Json.Converters.JsonObjectAsPrimitiveConverter"/>.
+            </para>
             </remarks>
             <example>
             <code>
@@ -1263,6 +1380,22 @@
             <remarks>
             Adapted from
             <see href="https://stackoverflow.com/a/60490067/52545"/>.
+            </remarks>
+        </member>
+        <member name="F:DotNetExtras.Common.RegularExpressions.RegexPattern.PersonName">
+            <summary>
+            A regular expression pattern for validating a user name parts (first name, last name, middle name, nickname).
+            </summary>
+            <remarks>
+            Tested at <see href="https://regexr.com/6ru33"/>.
+            </remarks>
+        </member>
+        <member name="F:DotNetExtras.Common.RegularExpressions.RegexPattern.PersonDisplayName">
+            <summary>
+            A regular expression pattern for validating user display name.
+            </summary>
+            <remarks>
+            Tested at <see href="https://regexr.com/7aids"/>.
             </remarks>
         </member>
     </members>

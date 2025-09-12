@@ -43753,6 +43753,11 @@
               Looks up a localized string similar to The DateTimeOffset text &apos;{0}&apos; should be in format &apos;yyyy-mm-ddThh:mm:ss(&apos;.&apos;s+)?(zzzzzz)?&apos; and each field value is within valid range..
             </summary>
         </member>
+        <member name="P:Microsoft.OData.Core.SRResources.UriUtils_RequiresAbsoluteUri">
+            <summary>
+              Looks up a localized string similar to This operation is not supported for a relative URI. (parameter: &apos;{0}&apos;)..
+            </summary>
+        </member>
         <member name="P:Microsoft.OData.Core.SRResources.UriValidator_ValidatorMustUseSameModelAsParser">
             <summary>
               Looks up a localized string similar to The UrlValidator used to validate an ODataUri must use the same Model as the ODataUriParser..
@@ -48956,6 +48961,13 @@
             Resolve query options to dictionary.
             </summary>
         </member>
+        <member name="M:Microsoft.OData.UriParser.ODataUriParser.CreateCustomQueryOptionNodes(System.Collections.Generic.IList{System.Collections.Generic.KeyValuePair{System.String,System.String}})">
+            <summary>
+            Generate a list of <see cref="T:Microsoft.OData.UriParser.CustomQueryOptionNode"/> from the custom query options.
+            </summary>
+            <param name="customQueryOptions">List of custom query options as key-value pairs.</param>
+            <returns>Custom query options as a list of <see cref="T:Microsoft.OData.UriParser.CustomQueryOptionNode"/>.</returns>
+        </member>
         <member name="M:Microsoft.OData.UriParser.ODataUriParser.IsODataQueryOption(System.String)">
             <summary>
             Judge if optionName belongs to UriQueryConstants (Case ignored).
@@ -49440,14 +49452,15 @@
             <param name="result">QueryToken representing this function.</param>
             <returns>True if the parsing was successful.</returns>
         </member>
-        <member name="M:Microsoft.OData.UriParser.FunctionCallParser.ParseArgumentListOrEntityKeyList(System.Action)">
+        <member name="M:Microsoft.OData.UriParser.FunctionCallParser.ParseArgumentListOrEntityKeyList(System.Action,System.ReadOnlySpan{System.Char})">
             <summary>
             Parses argument lists or entity key value list.
             </summary>
             <param name="restoreAction">Action invoked for restoring a state during failure.</param>
+            <param name="functionName">The name of the function being called. Default is an empty span.</param>
             <returns>The lexical tokens representing the arguments.</returns>
         </member>
-        <member name="M:Microsoft.OData.UriParser.FunctionCallParser.ParseArguments">
+        <member name="M:Microsoft.OData.UriParser.FunctionCallParser.ParseArguments(System.ReadOnlySpan{System.Char})">
             <summary>
             Parses comma-separated arguments.
             </summary>
@@ -49455,12 +49468,14 @@
             Arguments can either be of the form a=1,b=2,c=3 or 1,2,3.
             They cannot be mixed between those two styles.
             </remarks>
+            <param name="functionName">The name of the function being called. Default is an empty span.</param>
             <returns>The lexical tokens representing the arguments.</returns>
         </member>
-        <member name="M:Microsoft.OData.UriParser.FunctionCallParser.ReadArgumentsAsPositionalValues">
+        <member name="M:Microsoft.OData.UriParser.FunctionCallParser.ReadArgumentsAsPositionalValues(System.ReadOnlySpan{System.Char})">
             <summary>
             Read the list of arguments as a set of positional values
             </summary>
+            <param name="functionName">The name of the function being called. Default is an empty span.</param>
             <returns>A list of FunctionParameterTokens representing each argument</returns>
         </member>
         <member name="M:Microsoft.OData.UriParser.FunctionCallParser.TryReadArgumentsAsNamedValues(System.Collections.Generic.ICollection{Microsoft.OData.UriParser.FunctionParameterToken}@)">
@@ -49469,6 +49484,17 @@
             </summary>
             <param name="argList">the parsed list of arguments</param>
             <returns>true if the arguments were successfully read.</returns>
+        </member>
+        <member name="M:Microsoft.OData.UriParser.FunctionCallParser.SetParentForCurrentParameterToken(Microsoft.OData.UriParser.QueryToken,Microsoft.OData.UriParser.QueryToken)">
+            <summary>
+            Set the parent of the next argument to the current argument.
+            For example, in the following query:
+                cast(Location, NS.HomeAddress) where Location is the parentExpression and NS.HomeAddress is the parameterToken.
+                isof(Location, NS.HomeAddress) where Location is the parentExpression and NS.HomeAddress is the parameterToken.
+            </summary>
+            <param name="parentExpression">The previous parameter token.</param>
+            <param name="parameterToken">The current parameter token.</param>
+            <returns>The updated parameter token.</returns>
         </member>
         <member name="T:Microsoft.OData.UriParser.FunctionOverloadResolver">
             <summary>
@@ -53428,6 +53454,57 @@
         </member>
         <member name="P:Microsoft.OData.UriParser.CountVirtualPropertyNode.TypeReference">
             <summary>Type returned by the $count virtual property.</summary>
+        </member>
+        <member name="T:Microsoft.OData.UriParser.CustomQueryOptionNode">
+            <summary>
+            Base class for all custom query options.
+            </summary>
+        </member>
+        <member name="F:Microsoft.OData.UriParser.CustomQueryOptionNode.optionName">
+            <summary>
+            Initializes a new instance of the CustomQueryOptionNode class.
+            </summary>   
+            <summary>
+            The query option name.
+            </summary>
+        </member>
+        <member name="F:Microsoft.OData.UriParser.CustomQueryOptionNode.optionValue">
+            <summary>
+            The query option value.
+            </summary>
+        </member>
+        <member name="M:Microsoft.OData.UriParser.CustomQueryOptionNode.#ctor(System.String,System.String)">
+            <summary>
+            Create a NameValueCustomQueryOptionNode
+            </summary>
+            <param name="name">This node's primitive value. May be null.</param>
+            <param name="value">The literal text for this node's value. May be null.</param>
+            <exception cref="T:System.ArgumentNullException">Throws if the input value is null.</exception>
+        </member>
+        <!-- Badly formed XML comment ignored for member "P:Microsoft.OData.UriParser.CustomQueryOptionNode.Name" -->
+        <member name="P:Microsoft.OData.UriParser.CustomQueryOptionNode.Value">
+            <summary>
+            Gets the Query Option Value.
+            </summary>
+        </member>
+        <member name="P:Microsoft.OData.UriParser.CustomQueryOptionNode.Kind">
+            <summary>
+            Gets the kind of this node.
+            </summary>
+        </member>
+        <member name="P:Microsoft.OData.UriParser.CustomQueryOptionNode.InternalKind">
+            <summary>
+            Gets the kind of the query node.
+            </summary>
+        </member>
+        <member name="M:Microsoft.OData.UriParser.CustomQueryOptionNode.Accept``1(Microsoft.OData.UriParser.QueryNodeVisitor{``0})">
+            <summary>
+            Accept a <see cref="T:Microsoft.OData.UriParser.QueryNodeVisitor`1"/> to walk a tree of <see cref="T:Microsoft.OData.UriParser.QueryNode"/>s.
+            </summary>
+            <typeparam name="T">Type that the visitor will return after visiting this token.</typeparam>
+            <param name="visitor">An implementation of the visitor interface.</param>
+            <returns>An object whose type is determined by the type parameter of the visitor.</returns>
+            <exception cref="T:System.ArgumentNullException">Throws if the input visitor is null.</exception>
         </member>
         <member name="T:Microsoft.OData.UriParser.DetermineNavigationSourceTranslator">
             <summary>
@@ -59356,6 +59433,11 @@
             Node that represents a $root path
             </summary>
         </member>
+        <member name="F:Microsoft.OData.UriParser.QueryNodeKind.CustomQueryOption">
+            <summary>
+            Node that represents a custom query option
+            </summary>
+        </member>
         <member name="T:Microsoft.OData.UriParser.InternalQueryNodeKind">
             <summary>
             Internal enumeration of kinds of query nodes. A superset of QueryNodeKind
@@ -59534,6 +59616,11 @@
         <member name="F:Microsoft.OData.UriParser.InternalQueryNodeKind.RootPath">
             <summary>
             Node that represetns a $root path
+            </summary>
+        </member>
+        <member name="F:Microsoft.OData.UriParser.InternalQueryNodeKind.CustomQueryOption">
+            <summary>
+            Node that represents a custom query option
             </summary>
         </member>
         <member name="T:Microsoft.OData.UriParser.RequestTargetKind">
@@ -61374,6 +61461,13 @@
             <param name="nodeIn">the node to visit</param>
             <returns>Defined by the implementer</returns>
         </member>
+        <member name="M:Microsoft.OData.UriParser.QueryNodeVisitor`1.Visit(Microsoft.OData.UriParser.CustomQueryOptionNode)">
+            <summary>
+            Visit an CustomQueryOptionNode
+            </summary>
+            <param name="nodeIn">the node to visit</param>
+            <returns>Defined by the implementer</returns>
+        </member>
         <member name="T:Microsoft.OData.UriParser.SelectItemHandler">
             <summary>
             Handler interface for walking a select item tree.
@@ -62479,6 +62573,11 @@
             the model be immutable.
             </summary>
         </member>
+        <member name="F:Microsoft.OData.Edm.NormalizedModelElementsCache.EdmCoreModelInstance">
+            <summary>
+            Provides a shared, normalized case-insensitive cache of model elements for the EDM core model.
+            </summary>
+        </member>
         <member name="M:Microsoft.OData.Edm.NormalizedModelElementsCache.#ctor(Microsoft.OData.Edm.IEdmModel)">
             <summary>
             Builds a case-insensitive cache of schema elements from
@@ -62571,12 +62670,12 @@
         </member>
         <member name="M:Microsoft.OData.UriUtils.UriInvariantInsensitiveIsBaseOf(System.Uri,System.Uri)">
             <summary>
-            Determines whether the <paramref name="baseUri"/> Uri instance is a
-            base of the specified Uri instance.
+            Determines whether the <paramref name="baseUri"/> Uri instance is a base of the specified Uri instance.
             </summary>
             <remarks>
-            The check is host agnostic. For example, "http://host1.com/Service.svc" is a valid base Uri of "https://host2.org/Service.svc/Bla"
-            but is not a valid base for "http://host1.com/OtherService.svc/Bla".
+            The check is host agnostic. For example, "http://host1.com/Service.svc" is a valid base Uri of
+            "https://host2.org/Service.svc/Bla" but is not a valid base for "http://host1.com/OtherService.svc/Bla".
+            Path comparison is case-insensitive and segment-aware to align with OData path name resolution.
             </remarks>
             <param name="baseUri">The candidate base URI.</param>
             <param name="uri">The specified Uri instance to test.</param>
@@ -62622,11 +62721,6 @@
             </summary>
             <param name="uri">The Uri to be operated on.</param>
             <returns>The mock Uri, the base Uri if given <paramref name="uri"/> is null</returns>
-        </member>
-        <member name="M:Microsoft.OData.UriUtils.CreateBaseComparableUri(System.Uri)">
-            <summary>Creates a URI suitable for host-agnostic comparison purposes.</summary>
-            <param name="uri">URI to compare.</param>
-            <returns>URI suitable for comparison.</returns>
         </member>
         <member name="T:Microsoft.OData.ExpressionConstants">
             <summary>This type provides constants used in URI query expressions.</summary>
@@ -62971,6 +63065,13 @@
             <param name="node">The node to translate.</param>
             <returns>The translated String.</returns>
         </member>
+        <member name="M:Microsoft.OData.NodeToStringBuilder.Visit(Microsoft.OData.UriParser.CustomQueryOptionNode)">
+            <summary>
+            Translates a <see cref="T:Microsoft.OData.UriParser.CustomQueryOptionNode"/> into a corresponding <see cref="T:System.String"/>.
+            </summary>
+            <param name="node">The node to translate.</param>
+            <returns>The translated String.</returns>
+        </member>
         <member name="M:Microsoft.OData.NodeToStringBuilder.Visit(Microsoft.OData.UriParser.NonResourceRangeVariableReferenceNode)">
             <summary>
             Translates a <see cref="T:Microsoft.OData.UriParser.NonResourceRangeVariableReferenceNode"/> into a corresponding <see cref="T:System.String"/>.
@@ -63114,6 +63215,14 @@
             </summary>
             <param name="dictionary">Dictionary</param>
             <returns>The url query string of dictionary's key value pairs (URL encoded)</returns>
+        </member>
+        <member name="M:Microsoft.OData.NodeToStringBuilder.TranslateCustomQueryOptions(System.Collections.Generic.IEnumerable{Microsoft.OData.UriParser.QueryNode})">
+            <summary>
+            Translates a collection of custom query options into a query string representation.
+            </summary>
+            <param name="customQueryOptions">A collection of <see cref="T:Microsoft.OData.UriParser.QueryNode"/> objects representing the custom query options to be translated.</param>
+            <returns>A string containing the translated query options in a query string format.  Returns <see langword="null"/>
+            if no valid query options are provided.</returns>
         </member>
         <member name="M:Microsoft.OData.NodeToStringBuilder.TranslatePropertyAccess(Microsoft.OData.UriParser.QueryNode,System.String,Microsoft.OData.Edm.IEdmNavigationSource)">
             <summary>
