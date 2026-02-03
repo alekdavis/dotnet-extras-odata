@@ -6,11 +6,11 @@
     <Nullable>enable</Nullable>
     <AssemblyName>DotNetExtras.OData</AssemblyName>
     <RootNamespace>DotNetExtras.OData</RootNamespace>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <Title>$(AssemblyName)</Title>
     <Authors>Alek Davis</Authors>
     <Description>A .NET Core library implementing OData filter parsing and validation functions.</Description>
-    <Copyright>© 2025 Alek Davis</Copyright>
+    <Copyright>© 2026 Alek Davis</Copyright>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageId>$(AssemblyName)</PackageId>
     <PackageProjectUrl>https://alekdavis.github.io/dotnet-extras-odata</PackageProjectUrl>
@@ -32,12 +32,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetExtras.Common" Version="1.0.9" />
-    <PackageReference Include="DotNetExtras.Extended" Version="1.0.2" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="9.0.9" />
-    <PackageReference Include="Microsoft.OData.Core" Version="8.4.0" />
+    <PackageReference Include="DotNetExtras.Common" Version="1.0.19" />
+    <PackageReference Include="DotNetExtras.Extended" Version="1.0.3" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.2" />
+    <PackageReference Include="Microsoft.OData.Core" Version="8.4.3" />
     <PackageReference Include="Microsoft.OData.ModelBuilder" Version="2.0.0" />
-    <PackageReference Include="System.Text.Json" Version="9.0.9" />
+    <PackageReference Include="System.Text.Json" Version="10.0.2" />
   </ItemGroup>
 
 </Project>
