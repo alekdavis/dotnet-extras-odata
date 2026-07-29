@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <AssemblyName>DotNetExtras.OData</AssemblyName>
     <RootNamespace>DotNetExtras.OData</RootNamespace>
-    <Version>1.0.6</Version>
+    <Version>1.0.7</Version>
     <Title>$(AssemblyName)</Title>
     <Authors>Alek Davis</Authors>
     <Description>A .NET Core library implementing OData filter parsing and validation functions.</Description>
@@ -32,11 +32,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotNetExtras.Extended" Version="1.0.8" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.8" />
-    <PackageReference Include="Microsoft.OData.Core" Version="8.4.3" />
+    <PackageReference Include="DotNetExtras.Extended" Version="1.0.9" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.10" />
+    <PackageReference Include="Microsoft.OData.Core" Version="[8.4.3, 9.0)" />
     <PackageReference Include="Microsoft.OData.ModelBuilder" Version="2.0.0" />
-    <PackageReference Include="System.Text.Json" Version="10.0.8" />
+    <PackageReference Include="System.Text.Json" Version="10.0.10" />
   </ItemGroup>
 
 </Project>
